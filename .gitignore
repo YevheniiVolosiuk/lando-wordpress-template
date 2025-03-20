@@ -22,6 +22,9 @@
 !/var/log/.gitkeep
 /var/build/
 
+/.idea
+/.vscode
+
 # Dotenv
 /.env.local.*
 !/.env.example
