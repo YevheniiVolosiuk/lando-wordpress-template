@@ -32,8 +32,8 @@
 # WP-CLI
 /wp-cli.local.yml
 
-# Composer
 /vendor
+/node_modules
 
 # Tools
 /tools/*
