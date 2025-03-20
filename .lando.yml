@@ -1,0 +1,77 @@
+name: lando-wordpress
+recipe: wordpress
+proxy:
+    appserver:
+      - lando-wordpress.lndo.site
+    phpmyadmin:
+      - pma.lando-wordpress.lndo.site
+    mailhog:
+      - mail.lando-wordpress.lndo.site
+
+config:
+  php: '8.4'
+  via: apache
+  webroot: public
+  cache: redis
+  ssl: true
+  xdebug: true
+
+excludes:
+  - public
+  - node_modules
+  - vendor
+
+services:
+  database:
+    type: mariadb:11.5
+    portforward: true
+    creds:
+      database: wordpress
+      user: wordpress
+      password: password
+    environment:
+      ALLOW_EMPTY_PASSWORD: 'no'
+
+  appserver:
+    extras:
+      - apt-get update -y
+      - apt-get install zip nano dos2unix -y
+    run:
+      - bash .lando/bin/setup-wordpress.sh
+
+  node:
+    type: node:22
+
+  redis:
+    type: redis:6
+    portforward: 6379
+    run:
+      - eneble-redis
+
+  mailhog:
+    type: mailhog
+    portforward: true
+    hogfrom:
+      - appserver
+
+  phpmyadmin:
+    type: phpmyadmin:5.2
+    hosts:
+      - database
+
+tooling:
+  enable-redis:
+    service: appserver
+    cmd: |
+      cd $LANDO_MOUNT/public
+      wp config set WP_REDIS_HOST redis
+      wp config set WP_REDIS_PORT 6379
+      wp plugin install redis-cache --activate
+      wp redis enable
+  redis-cli:
+    service: redis
+  node:
+    service: node
+  npm:
+    service: node
+    run: npm -v

@@ -1,0 +1,39 @@
+{
+  "name": "ptd/lando-wordpress",
+  "description": "Lando WordPress Template",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": ["wpackagist-plugin/*", "wpackagist-theme/*"]
+    }
+  ],
+  "require": {
+    "wpackagist-plugin/debug-bar": "^1.1.6",
+    "wpackagist-plugin/query-monitor": "^3.17.2",
+    "wpackagist-theme/generatepress": "^3.5.1"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "optimize-autoloader": true
+    },
+    "preferred-install": "dist"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "installer-paths": {
+      "public/wp-content/mu-plugins/{$name}/": [
+        "type:wordpress-muplugin"
+      ],
+      "public/wp-content/plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ],
+      "public/wp-content/themes/{$name}/": [
+        "type:wordpress-theme"
+      ]
+    },
+    "wordpress-install-dir": "public"
+  }
+}
