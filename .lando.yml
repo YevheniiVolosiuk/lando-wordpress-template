@@ -1,77 +1,109 @@
-name: lando-wordpress
+# ----------------------------------------------------------------------------
+# Lando Environment for WordPress Development
+#
+# Services:
+# - Apache: 2.4
+# - PHP: 8.4
+# - Composer Version: 2.8.6
+# - MariaDB: 11.5
+# - Redis: 7
+# - Node: 22
+# - Mailhog: 1.0.1
+# - PhpMyAdmin: 5.2
+#
+# Purpose:
+# - Designed for flexible and clean single-site WordPress workflows.
+# - Redis object cache ready.
+# - Frontend build tools ready.
+# ----------------------------------------------------------------------------
+
+# Application name
+name: wordpress-app
+
+# Base Lando recipe
 recipe: wordpress
-proxy:
-    appserver:
-      - lando-wordpress.lndo.site
-    phpmyadmin:
-      - pma.lando-wordpress.lndo.site
-    mailhog:
-      - mail.lando-wordpress.lndo.site
 
+# WordPress-specific configuration
 config:
-  php: '8.4'
-  via: apache
-  webroot: public
-  cache: redis
-  ssl: true
-  xdebug: true
+  webroot: public           # WordPress installation path (relative to app root)
 
+# Proxy URLs for services
+proxy:
+  phpmyadmin:
+    - pma.wordpress-app.lndo.site    # Access PhpMyAdmin via this URL
+  mailhog:
+    - mail.wordpress-app.lndo.site   # Access MailHog via this URL
+
+# Files/folders to exclude from being shared into the container
 excludes:
-  - public
   - node_modules
   - vendor
 
+# Define containerized services
 services:
+  # PHP app server with Apache 2.4 and PHP 8.4
+  appserver:
+    type: php:8.4
+    composer_version: "2.8.6"         # Specific Composer version
+    via: apache:2.4                   # Use Apache web server
+    ssl: true                         # Enable SSL internally
+    sslExpose: false                  # Do not expose SSL externally
+    xdebug: false                     # Xdebug disabled by default
+    run_as_root:                      # Commands run at container build (as root)
+      - apt-get update -y
+      - apt-get install zip nano -y
+
+  # MariaDB database service
   database:
     type: mariadb:11.5
-    portforward: true
-    creds:
-      database: wordpress
-      user: wordpress
-      password: password
-    environment:
-      ALLOW_EMPTY_PASSWORD: 'no'
 
-  appserver:
-    extras:
-      - apt-get update -y
-      - apt-get install zip nano dos2unix -y
-    run:
-      - bash .lando/bin/setup-wordpress.sh
-
+  # Node.js service for frontend build tooling
   node:
     type: node:22
 
-  redis:
-    type: redis:6
-    portforward: 6379
-    run:
-      - eneble-redis
+  # Redis caching server for object caching
+  cache:
+    type: redis:7
+    portforward: 6379                 # Forward Redis port
+    persist: true                     # Preserve cache data across rebuilds
 
+  # MailHog service for catching outbound emails in development
   mailhog:
-    type: mailhog
-    portforward: true
+    type: mailhog:v1.0.1
+    ssl: true
+    sslExpose: false
     hogfrom:
-      - appserver
+      - appserver                     # Appserver sends mail through Mailhog
 
+  # PhpMyAdmin for MySQL database management
   phpmyadmin:
     type: phpmyadmin:5.2
+    ssl: true
+    sslExpose: false
     hosts:
       - database
 
+# CLI Tools available via Lando
 tooling:
-  enable-redis:
+  # WP-CLI for WordPress management
+  wp:
     service: appserver
-    cmd: |
-      cd $LANDO_MOUNT/public
-      wp config set WP_REDIS_HOST redis
-      wp config set WP_REDIS_PORT 6379
-      wp plugin install redis-cache --activate
-      wp redis enable
-  redis-cli:
-    service: redis
-  node:
-    service: node
-  npm:
-    service: node
-    run: npm -v
+    dir: /app/public
+
+  # Install fresh WordPress + wp-config automatically
+  install:wp:
+    service: appserver
+    description: "Fresh WordPress install with basic configuration."
+    cmd: bash .lando/bin/setup-wordpress-new.sh
+
+  # Clean WordPress defaults: posts, pages, comments; apply starter settings
+  setup:wp:
+    service: appserver
+    description: "Clean up default content and apply initial site settings."
+    cmd: bash .lando/bin/clean-wp.sh
+
+  # Install and enable Redis object caching
+  install:redis:
+    service: appserver
+    description: "Install Redis plugin and enable object caching."
+    cmd: bash .lando/bin/install-redis.sh
