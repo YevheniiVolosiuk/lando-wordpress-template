@@ -94,13 +94,13 @@ tooling:
   install:wp:
     service: appserver
     description: "Fresh WordPress install with basic configuration."
-    cmd: bash .lando/bin/setup-wordpress-new.sh
+    cmd: bash .lando/bin/install-fresh-wordpress.sh
 
   # Clean WordPress defaults: posts, pages, comments; apply starter settings
   setup:wp:
     service: appserver
     description: "Clean up default content and apply initial site settings."
-    cmd: bash .lando/bin/clean-wp.sh
+    cmd: bash .lando/bin/clean-wordpress.sh
 
   # Install and enable Redis object caching
   install:redis:
