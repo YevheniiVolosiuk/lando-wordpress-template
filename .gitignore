@@ -26,6 +26,7 @@
 /.vscode
 
 # Dotenv
+/.env
 /.env.local.*
 !/.env.example
 
