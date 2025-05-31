@@ -20,7 +20,7 @@ log_info "Creating wp-config.php..."
 wp config create \
    --dbname="${DB_NAME:-wordpress}" \
    --dbuser="${DB_USER:-wordpress}" \
-   --dbpass="${DB_PASSWORD:-wordpress}" \
+   --dbpass="${DB_PASSWORD:-password}" \
    --dbhost="${DB_HOST:-database}" \
    --dbprefix="${DB_PREFIX:-wp_}" \
    --skip-salts

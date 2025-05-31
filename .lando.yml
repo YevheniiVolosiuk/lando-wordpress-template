@@ -18,21 +18,21 @@
 # ----------------------------------------------------------------------------
 
 # Application name
-name: wordpress-app
+name: lando-with-wordpress
 
 # Base Lando recipe
 recipe: wordpress
 
 # WordPress-specific configuration
 config:
-  webroot: public           # WordPress installation path (relative to app root)
+  webroot: public               # WordPress installation path (relative to app root)
 
 # Proxy URLs for services
 proxy:
   phpmyadmin:
-    - pma.wordpress-app.lndo.site    # Access PhpMyAdmin via this URL
+    - pma.lando-with-wordpress.lndo.site    # Access PhpMyAdmin via this URL
   mailhog:
-    - mail.wordpress-app.lndo.site   # Access MailHog via this URL
+    - mail.lando-with-wordpress.lndo.site   # Access MailHog via this URL
 
 # Files/folders to exclude from being shared into the container
 excludes:

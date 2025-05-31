@@ -2,7 +2,7 @@
 
 set -e
 
-source "$LANDO_MOUNT/.lando/bin/utils/log.sh"
+source "$LANDO_MOUNT/.lando/utils/log.sh"
 
 # Load environment variables from .env file
 if [[ -f .env ]]; then
