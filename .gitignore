@@ -1,27 +1,8 @@
-# Application
-/public/wp-*/
-/public/wp-*.php
-/public/index.php
-/public/xmlrpc.php
-/public/readme.html
-/public/license.txt
-!/public/wp-content/
-/public/wp-content/*
-!/public/wp-content/mu-plugins/
-/public/wp-content/mu-plugins/*/
-!/public/wp-content/plugins/
-/public/wp-content/plugins/*
-!/public/wp-content/plugins/.gitkeep
-!/public/wp-content/themes/
-/public/wp-content/themes/*
-!/public/wp-content/themes/app/
-!/public/wp-content/uploads/
-/public/wp-content/uploads/*
-!/public/wp-content/uploads/.gitkeep
-/var/log/*
-!/var/log/.gitkeep
-/var/build/
+# Wordpress Files
+/public
+!public/.gitkeep
 
+# Ideas
 /.idea
 /.vscode
 
@@ -33,6 +14,7 @@
 # WP-CLI
 /wp-cli.local.yml
 
+# Dependencies
 /vendor
 /node_modules
 
