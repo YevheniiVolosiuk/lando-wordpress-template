@@ -107,3 +107,8 @@ tooling:
     service: appserver
     description: "Install Redis plugin and enable object caching."
     cmd: bash .lando/bin/install-redis.sh
+
+  sync:remote:
+    service: appserver
+    description: "Sync WordPress Project from remote to local."
+    cmd: bash .lando/bin/sync-remote-to-local.sh
