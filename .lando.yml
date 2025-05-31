@@ -49,17 +49,30 @@ services:
     ssl: true                         # Enable SSL internally
     sslExpose: false                  # Do not expose SSL externally
     xdebug: false                     # Xdebug disabled by default
-    run_as_root:                      # Commands run at container build (as root)
+    run_as_root: # Commands run at container build (as root)
       - apt-get update -y
       - apt-get install zip nano -y
+    overrides:
+      environment:
+        COMPOSER_CACHE_DIR: "/app/.cache/composer"
 
   # MariaDB database service
   database:
     type: mariadb:11.5
+    portforward: 3306
+    creds:
+      database: wordpress
+      user: wordpress
+      password: password
+    environment:
+      ALLOW_EMPTY_PASSWORD: 'no'
 
   # Node.js service for frontend build tooling
   node:
     type: node:22
+    run:
+      - npm config set cache /app/.cache/npm
+    command: tail -f /dev/null # Keep it running for faster command execution
 
   # Redis caching server for object caching
   cache:
