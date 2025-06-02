@@ -29,7 +29,7 @@ export_database_remotely() {
   fi
 
   # Export database directly through SSH pipeline to avoid temporary files on remote server
-  ssh "$REMOTE_HOST" "cd ${REMOTE_WP_PATH} && php -d error_reporting=0 -d display_errors=0 \$(which wp) db export --path=web/wp --net-buffer-length=16384 --max-allowed-packet=512M - 2>/dev/null | gzip" > "$LANDO_MOUNT/.lando/tmp/$DB_BACKUP"
+  ssh "$REMOTE_HOST" "php -d error_reporting=0 -d display_errors=0 \$(which wp) db export --path=${REMOTE_WP_PATH} --net-buffer-length=16384 --max-allowed-packet=512M - 2>/dev/null | gzip" > "$LANDO_MOUNT/.lando/tmp/$DB_BACKUP"
 
   if [[ $? -ne 0 ]]; then
     log_error "Failed to export remote database. Aborting."
@@ -126,8 +126,8 @@ command_exists "gzip"
 command_exists "gunzip"
 
 # Execute the sync process
-export_database_remotely
-sync_files_from_remote_to_local
+# export_database_remotely
+# sync_files_from_remote_to_local
 import_database_to_local
 update_urls_and_cleanup
 
