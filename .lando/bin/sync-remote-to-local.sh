@@ -126,8 +126,8 @@ command_exists "gzip"
 command_exists "gunzip"
 
 # Execute the sync process
-# export_database_remotely
-# sync_files_from_remote_to_local
+export_database_remotely
+sync_files_from_remote_to_local
 import_database_to_local
 update_urls_and_cleanup
 
