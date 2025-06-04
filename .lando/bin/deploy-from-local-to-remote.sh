@@ -138,9 +138,9 @@ command_exists "gzip"
 command_exists "scp"
 
 # Execute the deployment process
-# export_database_locally
-# sync_files_from_local_to_remote
-# import_database_to_remote
+export_database_locally
+sync_files_from_local_to_remote
+import_database_to_remote
 update_remote_urls_and_cleanup
 
 log_success "WordPress deployment completed successfully!"
