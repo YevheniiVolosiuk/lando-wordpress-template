@@ -125,3 +125,8 @@ tooling:
     service: appserver
     description: "Sync WordPress Project from remote to local."
     cmd: bash .lando/bin/sync-remote-to-local.sh
+
+  deploy:remote:
+    service: appserver
+    description: "Deploy WordPress Project from local to remote."
+    cmd: bash .lando/bin/deploy-from-local-to-remote.sh
